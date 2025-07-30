@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Books – BookLoop</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            primary: 'purple',
+            accent: 'purple',
+            light: '#F3F0FF',
+            text: '#1F1F2E',
+          },
+          animation: {
+            fade: "fadeIn 0.5s ease-out",
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-light font-sans text-text">
+
+  <!-- Header -->
+  <header class="bg-primary text-white py-4 px-6 shadow-md">
+    <div class="flex justify-between items-center max-w-6xl mx-auto">
+      <h1 class="text-xl font-bold">📖 BookLoop</h1>
+      <nav class="space-x-4">
+        <a href="/index" class="hover:underline">Home</a>
+        <a href="/dashboard" class="hover:underline">Dashboard</a>
+        <a href="/auth" class="hover:underline">Logout</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Book Cards Grid -->
+  <main class="max-w-6xl mx-auto py-10 px-4 animate-fade">
+    <!-- Filter by Location -->
+    <form method="GET" action="/books" class="mb-6">
+      <label for="location" class="block mb-2 text-sm font-medium">Filter by Location:</label>
+      <div class="flex gap-2 items-center">
+        <select name="location" id="location" class="border rounded px-3 py-2">
+          <option value="">All Locations</option>
+          <% uniqueLocations.forEach(loc=> { %>
+            <option value="<%= loc %>" <%=selectedLocation===loc ? 'selected' : '' %>><%= loc %>
+            </option>
+            <% }) %>
+        </select>
+        <button type="submit" class="bg-primary text-white px-4 py-2 rounded hover:bg-purple-700">Filter</button>
+      </div>
+    </form>
+
+
+    <h2 class="text-3xl font-semibold text-primary mb-6">Available Books for Exchange</h2>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <% if (books.length===0) { %>
+        <p class="text-gray-600">No books available.</p>
+        <% } else { %>
+          <% books.forEach(book=> { %>
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition p-4">
+              <% if (book.image) { %>
+                <img src="<%= book.image %>" alt="Book" class="w-full h-40 object-cover rounded-md mb-3">
+                <% } %>
+
+                  <h3 class="text-lg font-semibold">
+                    <%= book.title %>
+                  </h3>
+                  <p class="text-sm text-gray-600 mb-2">by <%= book.author %>
+                  </p>
+                  <p class="text-sm">Condition: <%= book.condition %>
+                  </p>
+                  <p class="text-sm">Location: <%= book.location %>
+                  </p>
+
+                  <form action="/request-book" method="POST" class="mt-4">
+                    <input type="hidden" name="bookId" value="<%= book.id %>">
+                    <input type="hidden" name="bookTitle" value="<%= book.title %>">
+                    <input type="hidden" name="ownerEmail" value="<%= book.owner %>">
+                    <input type="hidden" name="ownerName" value="<%= book.ownerName || 'Unknown' %>">
+                    <% if (book.owner===email) { %>
+                      <span class="text-blue-500 font-semibold">Your Book</span>
+                      <% } else { %>
+                        <a href="/chat/<%= book.owner %>"
+                          class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700">Chat with Owner</a>
+                        <% } %>
+
+
+                  </form>
+            </div>
+            <% }) %>
+              <% } %>
+    </div>
+
+
+
+  </main>
+
+
+</body>
+
+</html>

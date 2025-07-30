@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – BookLoop</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            primary: 'purple',
+            accent: 'purple',
+            light: '#F3F0FF',
+            text: '#1F1F2E',
+          },
+          animation: {
+            fade: "fadeIn 0.6s ease-out",
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(20px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-light font-sans text-text">
+
+  <!-- Header -->
+  <header class="bg-primary text-white py-4 px-6 shadow-md">
+    <div class="flex justify-between items-center max-w-6xl mx-auto">
+      <h1 class="text-xl font-bold">📖 BookLoop</h1>
+      <nav class="space-x-4 flex items-center">
+        <a href="/index" class="hover:underline">Home</a>
+        <a href="/books" class="hover:underline">Browse</a>
+        <form action="/logout" method="POST">
+          <button type="submit" class="hover:underline bg-transparent border-none text-white cursor-pointer">
+            Logout
+          </button>
+        </form>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- Dashboard Container -->
+  <main class="max-w-6xl mx-auto p-6 animate-fade">
+
+    <!-- Welcome -->
+    <section class="mb-8">
+      <h2 class="text-3xl font-semibold text-primary">Welcome back, <%= username.charAt(0).toUpperCase() +
+          username.slice(1).toLowerCase() %>
+          ! 👋</h2>
+      <p class="text-gray-600 mt-2">List your books or check out your current listings below.</p>
+    </section>
+
+    <!-- Book Listing Form -->
+    <section class="bg-white rounded-lg shadow p-6 mb-10">
+      <h3 class="text-xl font-semibold mb-4 text-primary">📘 List a New Book</h3>
+      <form class="space-y-4" action="/list-book" method="POST" enctype="multipart/form-data">
+
+        <div>
+          <label class="block text-sm font-medium">Title</label>
+          <input type="text" name="title"
+            class="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-accent" placeholder="Book Title" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Author</label>
+          <input type="text" name="author"
+            class="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-accent"
+            placeholder="Author Name" />
+        </div>
+        <div class="flex flex-col md:flex-row gap-4">
+          <div class="flex-1">
+            <label class="block text-sm font-medium">Condition</label>
+            <select name="condition" class="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-accent">
+              <option>New</option>
+              <option>Like New</option>
+              <option>Used</option>
+            </select>
+          </div>
+          <div class="flex-1">
+            <label class="block text-sm font-medium">Location</label>
+            <input type="text" name="location"
+              class="w-full border border-gray-300 p-2 rounded focus:ring-2 focus:ring-accent" placeholder="City" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium">Upload Image</label>
+          <input type="file" name="image" class="w-full border border-gray-300 p-2 rounded bg-light" />
+        </div>
+        <button type="submit" class="bg-primary text-white px-6 py-2 rounded hover:bg-purple-800 transition">
+          Submit
+        </button>
+      </form>
+    </section>
+
+
+    <!-- User's Book Listings -->
+    <!-- Toggle Buttons -->
+    <!-- Section Toggle Buttons -->
+    <div class="flex justify-center gap-4 mb-6">
+      <button onclick="showSection('booksSection')" class="bg-primary text-white px-4 py-2 rounded hover:bg-purple-800">
+        📚 Your Books
+      </button>
+      <button onclick="showSection('inboxSection')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        📥 Inbox (<%= inbox.length %>)
+      </button>
+
+    </div>
+
+    <!-- Your Books Section -->
+    <section id="booksSection">
+      <% if (books.length===0) { %>
+        <p class="text-gray-600 text-center">You haven't listed any books yet.</p>
+        <% } else { %>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% books.forEach(book=> { %>
+              <div class="bg-white shadow rounded-xl p-4">
+                <% if (book.image) { %>
+                  <img src="<%= book.image %>" alt="Book" class="w-full h-40 object-cover rounded-md mb-3">
+                  <% } %>
+                    <h4 class="font-semibold text-lg">
+                      <%= book.title %>
+                    </h4>
+                    <p class="text-sm text-gray-600">by <%= book.author %>
+                    </p>
+                    <p class="text-sm mt-1">Condition: <%= book.condition %>
+                    </p>
+                    <p class="text-sm">Location: <%= book.location %>
+                    </p>
+
+                    <form action="/delete-book" method="POST" class="mt-3">
+                      <input type="hidden" name="bookId" value="<%= book.id %>">
+                      <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition">
+                        Delete
+                      </button>
+                    </form>
+              </div>
+              <% }) %>
+          </div>
+          <% } %>
+    </section>
+    <!-- Inbox Section -->
+    <section id="inboxSection" class="hidden">
+      <% if (inbox.length===0) { %>
+        <p class="text-gray-600 text-center">No messages yet.</p>
+        <% } else { %>
+          <div class="space-y-4">
+            <% inbox.forEach(chat=> { %>
+              <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+                <div>
+                  <p class="font-semibold text-primary">
+                    <%= chat.user %>
+                  </p>
+                  <p class="text-gray-600 text-sm">
+                    <%= chat.lastMessage %>
+                  </p>
+                  <p class="text-gray-400 text-xs">
+                    <%= chat.time.toLocaleString() %>
+                  </p>
+                </div>
+                <a href="/chat/<%= chat.user %>"
+                  class="bg-primary text-white px-4 py-2 rounded hover:bg-purple-800 transition">
+                  View Chat
+                </a>
+              </div>
+              <% }) %>
+          </div>
+          <% } %>
+    </section>
+
+
+  </main>
+
+
+</body>
+<script>
+  function showSection(sectionId) {
+    const sections = ["booksSection", "inboxSection"];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.add("hidden");
+    });
+
+    const target = document.getElementById(sectionId);
+    if (target) target.classList.remove("hidden");
+  }
+</script>
+
+
+</html>

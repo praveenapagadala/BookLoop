@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login / Signup – BookLoop</title>
+
+  <!-- Poppins Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            primary: 'purple',   // Book brown
+            accent: 'purple',    // Soft orange
+            text: '#2C3E50',
+            light: '#F9F9F9',
+          },
+          animation: {
+            fade: "fadeIn 0.5s ease-out",
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-light font-sans">
+
+  <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white shadow-xl rounded-xl overflow-hidden max-w-4xl w-full md:flex animate-fade">
+
+      <!-- Left: Illustration -->
+      <div class="md:w-1/2 bg-primary text-white flex items-center justify-center p-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-bold mb-2">📚 BookLoop</h2>
+          <p class="text-lg">Exchange books. Connect minds. Grow together.</p>
+        </div>
+      </div>
+
+      <!-- Right: Auth Form -->
+      <div class="md:w-1/2 p-8">
+        <form id="authForm" method="POST">
+
+          <h3 class="text-2xl font-semibold text-center text-primary mb-6" id="form-title">Login</h3>
+
+          <!-- Name (Signup only) -->
+          <div id="nameField" class="hidden mb-4">
+            <label class="block text-sm font-medium mb-1 text-text">Full Name</label>
+            <input type="text" id="name" name="name"
+              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent" placeholder="John Doe" />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1 text-text">Email</label>
+            <input type="email" id="email" name="email"
+              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent"
+              placeholder="you@example.com" required />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1 text-text">Password</label>
+            <input type="password" id="password" name="password"
+              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-accent" placeholder="********"
+              required />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="authAction"
+            class="w-full bg-primary text-white py-2 rounded hover:bg-[#5A2D00] transition duration-200">
+            Login
+          </button>
+
+          <!-- Toggle Link -->
+          <p class="text-center text-sm text-text mt-4">
+            <span id="toggleText">Don't have an account?</span>
+            <button type="button" id="toggleForm" class="text-accent font-semibold hover:underline">Sign up</button>
+          </p>
+        </form>
+        <% if (typeof error !=='undefined' ) { %>
+          <div class="bg-red-100 text-red-800 p-2 mb-4 rounded">
+            <%= error %>
+          </div>
+          <% } %>
+
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toggle Logic -->
+  <!-- Firebase App SDK -->
+
+
+  <script>
+    const toggleForm = document.getElementById("toggleForm");
+    const toggleText = document.getElementById("toggleText");
+    const formTitle = document.getElementById("form-title");
+    const nameField = document.getElementById("nameField");
+    const authButton = document.getElementById("authAction");
+    const authForm = document.getElementById("authForm");
+
+    let isSignup = false;
+
+    toggleForm.addEventListener("click", () => {
+      isSignup = !isSignup;
+
+      nameField.classList.toggle("hidden", !isSignup);
+      formTitle.textContent = isSignup ? "Sign Up" : "Login";
+      toggleText.textContent = isSignup ? "Already have an account?" : "Don't have an account?";
+      toggleForm.textContent = isSignup ? "Login" : "Sign up";
+      authButton.textContent = isSignup ? "Sign Up" : "Login";
+
+      // 🔁 Update form action depending on mode
+      authForm.action = isSignup ? "/auth" : "/login";
+    });
+
+  </script>
+  <script>
+    authForm.action = "/login"; // Default is login
+  </script>
+
+
+</body>
+
+</html>

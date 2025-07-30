@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chat with <%= receiver %>
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
+    <style>
+        body {
+            margin: 20px;
+        }
+
+        .chat-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            height: 400px;
+            overflow-y: scroll;
+            background: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .own {
+            justify-content: flex-end;
+        }
+
+        .other {
+            justify-content: flex-start;
+        }
+
+        .bubble {
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #e0f7fa;
+        }
+
+        .own .bubble {
+            background-color: #dcedc8;
+        }
+
+        .sender {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Chat with <%= receiver %>
+    </h2>
+
+    <div class="chat-box" id="chatBox">
+        <% if (messages.length===0) { %>
+            <p>No messages yet. Start the conversation!</p>
+            <% } else { %>
+                <% messages.forEach(function(message) { %>
+                    <div
+                        class="message <%= message.sender.toLowerCase() === currentUser.toLowerCase() ? 'own' : 'other' %>">
+                        <div>
+                            <div class="sender">
+                                <%= message.sender.toLowerCase()===currentUser.toLowerCase() ? 'You' : message.sender %>
+                            </div>
+                            <div class="bubble">
+                                <%= message.message %>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                        <% } %>
+    </div>
+
+
+    <form id="messageForm">
+        <input type="hidden" name="receiver" id="receiver" value="<%= receiver %>">
+        <input type="text" name="message" id="messageInput" placeholder="Type a message..." required
+            style="width: 80%;">
+        <button type="submit">Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const messageForm = document.getElementById('messageForm');
+        const messageInput = document.getElementById('messageInput');
+
+        const currentUser = "<%= currentUser %>";
+        const receiver = "<%= receiver %>";
+
+        const socket = io(); // Connect to server
+
+        // Helper to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Render a message to the chat box
+        function renderMessage(message) {
+            const isOwn = message.sender.toLowerCase() === currentUser.toLowerCase();
+            const div = document.createElement('div');
+            div.className = `message ${isOwn ? 'own' : 'other'}`;
+            div.innerHTML = `
+      <div>
+        <div class="sender">${isOwn ? 'You' : escapeHtml(message.sender)}</div>
+        <div class="bubble">${escapeHtml(message.message)}</div>
+      </div>
+    `;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Load existing messages initially
+        async function loadMessages() {
+            try {
+                const res = await fetch(`/get-messages?currentUser=${encodeURIComponent(currentUser)}&receiver=${encodeURIComponent(receiver)}`);
+                const messages = await res.json();
+
+                chatBox.innerHTML = '';
+                if (messages.length === 0) {
+                    chatBox.innerHTML = '<p>No messages yet. Start the conversation!</p>';
+                } else {
+                    messages.forEach(renderMessage);
+                }
+            } catch (err) {
+                console.error("Failed to load messages:", err);
+            }
+        }
+
+        // Submit message form
+        messageForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            socket.emit("sendMessage", {
+                sender: currentUser,
+                receiver: receiver,
+                message: message
+            });
+
+            messageInput.value = '';
+        });
+
+        // Listen for new messages
+        socket.on("newMessage", (data) => {
+            // Only show if it belongs to this chat session
+            const isRelevant =
+                (data.sender === currentUser && data.receiver === receiver) ||
+                (data.sender === receiver && data.receiver === currentUser);
+
+            if (isRelevant) {
+                renderMessage(data);
+            }
+        });
+
+        // Initial load
+        loadMessages();
+    </script>
+
+
+
+
+</body>
+
+</html>

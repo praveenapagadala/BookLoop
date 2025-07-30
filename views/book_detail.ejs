@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Details – BookLoop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          animation: {
+            fade: "fadeIn 0.5s ease-out",
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <!-- Navbar -->
+  <header class="bg-purple text-white p-4 flex justify-between items-center shadow-md">
+    <h1 class="text-xl font-bold">📚 BookLoop</h1>
+    <nav class="space-x-4">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="books.html" class="hover:underline">Browse</a>
+      <a href="dashboard.html" class="hover:underline">Dashboard</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8 animate-fade">
+
+    <div class="bg-white shadow rounded-lg overflow-hidden md:flex">
+      
+      <!-- Book Image -->
+      <img src="https://via.placeholder.com/300x400?text=Book+Cover"
+           alt="Book Cover"
+           class="w-full md:w-1/2 h-80 md:h-auto object-cover">
+      
+      <!-- Book Info -->
+      <div class="p-6 flex flex-col justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-purple mb-2">Book Title Here</h2>
+          <p class="text-sm italic text-gray-600 mb-1">by Author Name</p>
+          <p class="text-sm text-gray-500 mb-4">Genre: Fiction</p>
+          <p class="text-gray-700 text-base mb-4">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. A detailed summary of the book will go here. It could include highlights, storyline, or specific editions.
+          </p>
+        </div>
+
+        <!-- Owner Details -->
+        <div class="mt-4">
+          <h4 class="text-sm font-semibold text-gray-700">Listed By:</h4>
+          <p class="text-sm text-gray-600">User Name</p>
+          <p class="text-sm text-gray-500">user@example.com</p>
+
+          <!-- Action Buttons -->
+          <div class="mt-4 flex space-x-4">
+            <button class="bg-purple text-white px-4 py-2 rounded hover:bg-purple transition">
+              Message Owner
+            </button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">
+              Request Exchange
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
