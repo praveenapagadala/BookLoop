@@ -1,8 +1,10 @@
-📚 BookLoop
+📚 **BookLoop**
+
 BookLoop is a book exchange platform that allows users to register, list books, browse available titles, filter by location, and connect with others through a built-in messaging system.
 It uses an Express.js + EJS frontend with Node.js backend and Multer for image uploads.
 
-🚀 Features
+🚀 **Features**
+
 📖 User Registration & Login (session-based authentication)
 
 📚 Add New Book with cover image upload
@@ -17,8 +19,9 @@ It uses an Express.js + EJS frontend with Node.js backend and Multer for image u
 
 🗂 View Your Uploaded Books in Dashboard
 
-🛠 Tech Stack
-Frontend
+🛠 **Tech Stack**
+
+__Frontend__
 
 EJS templates
 
@@ -26,7 +29,7 @@ HTML5, CSS3, JavaScript
 
 Bootstrap for styling
 
-Backend
+__Backend__
 
 Node.js
 
@@ -36,14 +39,12 @@ Multer (for file uploads)
 
 Express-session
 
-Database
+__Database__
 
 MongoDB (Mongoose ODM)
 
-📂 Project Structure
-csharp
-Copy
-Edit
+📂 **Project Structure**
+
 BookLoop/
 │
 ├── public/           # Static assets (CSS, JS, uploaded images)
@@ -53,42 +54,9 @@ BookLoop/
 ├── server.js         # Main backend server
 ├── package.json      # Project dependencies
 └── README.md         # Project documentation
-⚙️ Installation & Setup
-Clone the repository
 
-bash
-Copy
-Edit
-git clone https://github.com/yourusername/BookLoop.git
-cd BookLoop
-Install dependencies
 
-bash
-Copy
-Edit
-npm install
-Set up environment variables
-Create a .env file in the root directory:
-
-env
-Copy
-Edit
-PORT=3000
-MONGODB_URI=your_mongodb_connection_string
-SESSION_SECRET=your_secret
-Run the application
-
-bash
-Copy
-Edit
-npm start
-App will run at: http://localhost:3000
-
-📸 Screenshots
-(Add screenshots of your homepage, location filter, messaging system, and dashboard here)
-
-📌 Future Enhancements
-Switch image storage from local uploads to Cloudinary
+📌 **Future Enhancements**
 
 Add search by book title and author
 
