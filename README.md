@@ -41,7 +41,7 @@ Express-session
 
 __Database__
 
-MongoDB (Mongoose ODM)
+Firestore
 
 📂 **Project Structure**
 
@@ -49,7 +49,6 @@ BookLoop/
 │
 ├── public/           # Static assets (CSS, JS, uploaded images)
 ├── views/            # EJS templates for pages
-├── models/           # Mongoose schemas
 ├── routes/           # Express route handlers
 ├── server.js         # Main backend server
 ├── package.json      # Project dependencies
